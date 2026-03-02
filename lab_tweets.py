@@ -181,7 +181,7 @@ print("Number of tweets =", len(tweets))
 
 # Count number of tweets that contain each word
 # 3 Interesting words: maga, stock, china
-keywords = ["obama", "trump", "mexico", "russia", "fake news", "maga", "stock", "china"]
+keywords = ["obama", "war", "horrible", "republican", "democrat", "maga", "stock", "china"]
 
 wordCounts = {}
 for word in keywords:
@@ -192,19 +192,16 @@ for tweet in tweets:
         if word.lower() in tweet.lower():
             wordCounts[word] += 1
 
-# Calculate percentages
 totalTweets = len(tweets)
 percentages = {}
 for word in keywords:
     percentages[word] = (wordCounts[word] / totalTweets * 100) if totalTweets > 0 else 0
 
-# Display in markdown table
 print("| phrase            | percent of tweets |")
 print("| ----------------- | ----------------- |")
 for word in keywords:
     print(f"| {word:<17} | {percentages[word]:>8.2f}             |")
 
-# Plot results in bar graph
 plt.bar(percentages.keys(), percentages.values())
 plt.xlabel('Keywords')
 plt.ylabel('Percentage of Tweets')
