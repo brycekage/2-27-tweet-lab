@@ -157,6 +157,58 @@ There are two extra credit opportunities for this lab, worth one point each.
 '''
 
 import json
-import zipfile
+import matplotlib.pyplot as plt
 
-zip_path = 
+jsonFiles = ["master_2009.json", "master_2010.json", "master_2011.json", 
+             "master_2012.json", "master_2013.json", "master_2014.json", 
+             "master_2015.json", "master_2016.json", "master_2017.json", 
+             "master_2018.json"]
+
+tweets = []
+numTweets = 0
+for x in jsonFiles:
+    with open(x, "r", encoding="utf-8") as file:
+        for y in json.load(file):
+            try:
+                tweets.append(y["text"])
+            except KeyError:
+                try:
+                    tweets.append(y["full_text"])
+                except:
+                    print("Error with tweet:", y)
+# Count number of tweets
+print("Number of tweets =", len(tweets))
+
+# Count number of tweets that contain each word
+# 3 Interesting words: maga, stock, china
+keywords = ["obama", "trump", "mexico", "russia", "fake news", "maga", "stock", "china"]
+
+wordCounts = {}
+for word in keywords:
+    wordCounts[word] = 0
+
+for tweet in tweets:
+    for word in keywords:
+        if word.lower() in tweet.lower():
+            wordCounts[word] += 1
+
+# Calculate percentages
+totalTweets = len(tweets)
+percentages = {}
+for word in keywords:
+    percentages[word] = (wordCounts[word] / totalTweets * 100) if totalTweets > 0 else 0
+
+# Display in markdown table
+print("| phrase            | percent of tweets |")
+print("| ----------------- | ----------------- |")
+for word in keywords:
+    print(f"| {word:<17} | {percentages[word]:>8.2f}             |")
+
+# Plot results in bar graph
+plt.bar(percentages.keys(), percentages.values())
+plt.xlabel('Keywords')
+plt.ylabel('Percentage of Tweets')
+plt.title('Percentage of Trump Tweets Containing Each Keyword')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig("tweet_counts.png")
